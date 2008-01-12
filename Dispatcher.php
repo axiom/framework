@@ -67,6 +67,9 @@ class Dispatcher {
 						include(dirname(__FILE__) . "/errors/404error.php");
 					}
 				}
+			} else {
+				throw new FrameworkException(FrameworkException::NOT_FOUND,
+					"Kunde tyvärr inte hitta sidan du sökte.");
 			}
 		}
 		return $success;

@@ -14,8 +14,11 @@ class ErrorHandler {
 	public function errorHandler($errno, $errstr, $errfile = null,
 	                             $errline = null, $errcontext = null)
 	{
-		echo '<strong>'.basename($errfile).'</strong> [#'.$errline.'] '.$errstr.'<br/>';
-		print_r(debug_backtrace());
+		if (!error_reporting()) {
+			return;
+		}
+
+		throw new Exception($errstr, $errno);
 	}
 
 	public function exceptionHandler(Exception $e)
@@ -26,6 +29,11 @@ class ErrorHandler {
 
 		$this->exception = $e;
 
+		// Send a stacktrace to the developers if there is a serious error.
+		if ($e->getCode() > FrameworkException::NOT_FOUND) {
+			$this->mailTrace($e, 'johannes@antiklimax.se');
+		}
+
 		if ($this->serveErrorPage()) {
 			die();
 		}
@@ -34,7 +42,6 @@ class ErrorHandler {
 		echo '<h1>'.$e->getCode().'</h1>';
 		echo '<p>'.$e->getMessage().'</p>';
 		echo '</div>';
-		// $this->mailTrace($e, 'johannes@antiklimax.se');
 	}
 
 	protected $exception;

@@ -25,6 +25,5 @@ class Model {
 
 	protected $attr;
 	protected $relations;
-	protected $load;
 }
 ?>
