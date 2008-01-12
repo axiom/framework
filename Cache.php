@@ -7,14 +7,18 @@
  * that can be either true or false, when true the caching is enabled when
  * false it's disabled.
  *
- * The caching mechanism works on a file basis. Each request is identified
- * (with the request uri) and the identifier is then hashed by the sha1
- * algorithm. A cache file is created by redirecting the output buffer to the
- * cache file.
+ * There is also an option for activating image caching: _use_image_cache_ which 
+ * will, when enabled, cache images for a period of 30 days.
+ *
+ * The caching mechanism works on a URI basis. Each request is identified
+ * (with the request uri) and this uri together with a timestamp (of sorts) is 
+ * then hashed by the sha1  algorithm. A cache file is created by redirecting 
+ * the output buffer to the cache file.
  *
  * If caching is enabled and a cache file exists for a given identifier, then
  * that file is served to the output buffer. Otherwise the cache file will be
- * created.
+ * created. However if the browser use the If-None-Match header we can skip 
+ * sending the file.
  *
  * FIXME: The caching mechanism are quite dumb, it does not allow any dynamic
  * interaction with the server. This is something that must be fixed to be more
@@ -28,28 +32,36 @@ class Cache {
 	 * Initialize the class.
 	 *
 	 * Parameters:
-	 *     identifier - A string that should identify the requested resources
-	 *     e.g. _blog/show/1_
+	 *     request - An instance of the <Request> class. (Used to get URI and 
+	 *     headers.)
 	 */
-	public function __construct($request) {
+	public function __construct($request)
+	{
 		$this->config = Config::getInstance();
 		$this->request = $request;
 		$this->identifier = $this->request->getURI();
 
+		// FIXME: Quite crude identification of images.
 		if (strpos($this->identifier, 'thumbnail') !== false) {
+			// FIXME: Configuration setting?
+			// The timespan a cached file is considered valid. (30 days).
 			$time = round(time() / (60 * 60 * 24 * 30));
 		} else {
 			if (!$this->config->useCache()) {
 				return false;
 			}
 
+			// FIXME: Configuration setting?
+			// The timespan a cached file is considered valid.
 			$time = round(time() / (60 * 60));
 		}
 
 		// Generate an identifier that can be used as a file descriptor.
 		$this->identifier = sha1($this->identifier . $time);
 
-		// Check if the client has cached the file already.
+		// Check if the client already have the file in it's local cache. If it 
+		// does and the cache file is up-to-date we can send a 304 Not Modified 
+		// reply (which is nice).
 		if ($request->getHeader('If-None-Match') == $this->identifier) {
 			header("HTTP/1.1 304 Not Modified");
 			header('ETag: '.$this->identifier);
@@ -58,19 +70,15 @@ class Cache {
 		}
 
 		$this->cacheDir = $this->config->getCacheDir();
-
-		// Construct the cache filename.
 		$this->cacheFile = $this->cacheDir.'/'.$this->identifier;
 
-		// Can we already serve the cache file?
+		// If we've the file in our cache just serve that and be done with it.
 		if (is_file($this->cacheFile) && is_readable($this->cacheFile)) {
 			$this->serveCache();
 			$this->served = true;
 			return true;
 		}
 
-		// Check if we can write to the cache directory, if not we should make
-		// someone aware of this since it disables the caching mechanism.
 		else if (is_writable($this->cacheDir)) {
 			$this->active = true;
 			ob_start();
@@ -78,19 +86,23 @@ class Cache {
 			header('ETag: '.$this->identifier);
 			return true;
 		}
-		// TODO: Raise hell!
+		// We couldn't write to the cache directory, we need to make someone 
+		// aware of this since it effectively disables the whole caching 
+		// mechanism.
 		else {
-			echo "Couldn't write to cache directory.";
-			return false;
+			throw new FrameworkException(FrameworkException::CACHE_DIR_NOT_WRITEABLE,
+				"Kunde inte skriva till cache katalogen, kontrollera rättigheterna.");
 		}
 	}
 
 	/*
 	 * Destructor: __destruct
 	 *
-	 * Closes any open cache-files and buffers.
+	 * Collects the output from the application and writes it to disc and serves 
+	 * it to the browser.
 	 */
-	public function __destruct() {
+	public function __destruct()
+	{
 		if ($this->active) {
 			$fh = fopen($this->cacheFile, 'w');
 			fwrite($fh, ob_get_contents());
@@ -104,11 +116,12 @@ class Cache {
 	/*
 	 * Method: serveCache
 	 *
-	 * Serves up the cache-file to the browser.
+	 * Serves the cache-file to the browser and sets the ETag header for caching 
+	 * purposes.
 	 */
-	private function serveCache() {
+	private function serveCache()
+	{
 		header('ETag: '.$this->identifier);
-		header('Content-Type: image/jpeg');
 		readfile($this->cacheFile);
 		return;
 	}
@@ -117,9 +130,10 @@ class Cache {
 	 * Method: isActive
 	 *
 	 * Returns:
-	 *     True if caching has been activated, false otherwise.
+	 *     True if caching is active, false otherwise.
 	 */
-	public function isActive() {
+	public function isActive()
+	{
 		return $this->active;
 	}
 
@@ -130,19 +144,9 @@ class Cache {
 	 *     True if the cache-file has been served to the browser, false
 	 *     otherwise.
 	 */
-	public function isServed() {
+	public function isServed()
+	{
 		return $this->served;
-	}
-
-	/*
-	 * Method: getCacheFile
-	 *
-	 * Returns:
-	 *     Filename for the specified cache-resource. It's implemented as a
-	 *     sha1-hash of the cache-resources.
-	 */
-	public static function getCacheFile($uri) {
-		return sha1($uri);
 	}
 
 	private $active = false;

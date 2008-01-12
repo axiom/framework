@@ -5,15 +5,16 @@
  * Configuration class that parses the applications configuration file.
  * Imlemented as a singelton (<getInstance>).
  */
-class Config {
+class Config
+{
 
 	/*
 	 * Constructor: __construct
 	 *
-	 * Reads the config file to a class variable and determains the
-	 * applications base path.
+	 * Load the configuration file for the application.
 	 */
-	protected function __construct() {
+	protected function __construct()
+	{
 		$this->BASEPATH = dirname($_SERVER["PHP_SELF"]);
 
 		// FIXME: Hardcoded application path.
@@ -27,15 +28,28 @@ class Config {
 		$this->routes = $routes; 
 	}
 
-	public function get($section, $key) {
+	/*
+	 * Method: get
+	 *
+	 * Get settings from the configuration file. Also see 
+	 * <getValueWithDefault>.
+	 *
+	 * Parameters:
+	 *     section - The section to use.
+	 *     key - The setting keyword to look up.
+	 *
+	 * Returns:
+	 *     Returns the configuration value if found, null otherwise.
+	 */
+	public function get($section, $key)
+	{
 		return $this->getValueWithDefault($section, $key, null);
 	}
 
 	/*
 	 * Method: getBasepath
 	 *
-	 * The basepath is the URL-location of this application relative to the
-	 * webroot.
+	 * The basepath is the URL-location of this application.
 	 *
 	 * Parameters:
 	 *     full - If this is set to true the full url-basepath will be returned
@@ -45,7 +59,8 @@ class Config {
 	 * Returns:
 	 *     The basepath to the application.
 	 */
-	public function getBasepath($full = false) {
+	public function getBasepath($full = false)
+	{
 		if ($full) {
 			return trim('http://'.$_SERVER['HTTP_HOST'].'/'.$this->BASEPATH, '/');
 		} else {
@@ -60,11 +75,12 @@ class Config {
 	 * _application/cache_.
 	 *
 	 * Returns:
-	 *     Full path to the directory with an ending slash.
+	 *     Full path to the cache directory.
 	 */
-	public function getCacheDir() {
+	public function getCacheDir()
+	{
 		// FIXME: Hardcoded application path.
-		$default = dirname(__FILE__)."/../application/cache/";
+		$default = dirname(__FILE__)."/../application/cache";
 		return $this->getValueWithDefault('application', 'cache_dir', $default);
 	}
 
@@ -76,7 +92,8 @@ class Config {
 	 * Returns:
 	 *     The only instance of this class.
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (!is_object(self::$INSTANCE)) {
 			self::$INSTANCE = new self();
 		}
@@ -90,7 +107,8 @@ class Config {
 	 * Returns:
 	 *    True if config is turned on in the config-file otherwise false.
 	 */
-	public function useCache() {
+	public function useCache()
+	{
 		return $this->getValueWithDefault('application', 'use_cache', false);
 	}
 
@@ -100,76 +118,96 @@ class Config {
 	 * Returns:
 	 *    True if config is turned on in the config-file otherwise false.
 	 */
-	public function useImageCache() {
+	public function useImageCache()
+	{
 		return $this->getValueWithDefault('application', 'use_image_cache', true);
 	}
 
 	/*
 	 * Method: getDefaultController
 	 *
+	 * Get the default controller for the application, e.g. when no controller 
+	 * is specified use this one.
+	 *
 	 * Returns:
 	 *    The default controller as specified in the configuration file, or
-	 *    false if not specified.
+	 *    null if not specified.
 	 */
-	public function getDefaultController() {
-		return $this->getValueWithDefault('application','default_controller',
-			'page');
+	public function getDefaultController()
+	{
+		return $this->getValueWithDefault('application', 'default_controller',
+			null);
 	}
 
 	/*
 	 * Method: getDefaultAction
 	 *
+	 * Get the default action to use when no action is specified.
+	 *
 	 * Returns:
 	 *    The default action as specified in the configuration file, defaults
 	 *    to 'index' if not specified in the configuration file.
 	 */
-	public function getDefaultAction() {
+	public function getDefaultAction()
+	{
 		return $this->getValueWithDefault('application', 'default_action',
 			'index');
 	}
 
-	public function getErrorController() {
+	/*
+	 * Method: getErrorController
+	 *
+	 * FIXME: Reimund?
+	 */
+	public function getErrorController()
+	{
 		return false;
 	}
 
 	/*
-	 * Method: useCache
+	 * Method: getDatabaseDriver
 	 *
 	 * Returns:
 	 *    The specified database driver (e.g. mysql) from the configuration
 	 *    file.
 	 */
-	public function getDatabaseDriver() {
+	public function getDatabaseDriver()
+	{
 		return $this->getValueWithDefault('database', 'driver', 'mysql');
 	}
 
 	/*
-	 * Method: useCache
+	 * Method: getDatabaseName
 	 *
 	 * Returns:
 	 *    The specified database database name from the configuration file.
 	 */
-	public function getDatabaseName() {
+	public function getDatabaseName()
+	{
 		return $this->getValueWithDefault('database', 'database_name', 'app');
 	}
 
 	/*
-	 * Method: useCache
+	 * Method: getDatabaseUsername
 	 *
 	 * Returns:
-	 *    The specified database username from the configuration file.
+	 *    The specified database username from the configuration file (defaults 
+	 *    to 'root').
 	 */
-	public function getDatabaseUsername() {
+	public function getDatabaseUsername()
+	{
 		return $this->getValueWithDefault('database', 'username', 'root');
 	}
 
 	/*
-	 * Method: useCache
+	 * Method: getDatabasePassword
 	 *
 	 * Returns:
-	 *    The specified database password from the configuration file.
+	 *    The specified database password from the configuration file (defaults 
+	 *    to '' (empty)).
 	 */
-	public function getDatabasePassword() {
+	public function getDatabasePassword()
+	{
 		return $this->getValueWithDefault('database', 'password', '');
 	}
 
@@ -177,9 +215,11 @@ class Config {
 	 * Method: getDatabaseHostname
 	 *
 	 * Returns:
-	 *    The specified database hostname from the configuration file.
+	 *    The specified database hostname from the configuration file (defaults 
+	 *    to 'localhost').
 	 */
-	public function getDatabaseHostname() {
+	public function getDatabaseHostname()
+	{
 		return $this->getValueWithDefault('database', 'hostname', 'localhost');
 	}
 
@@ -187,34 +227,38 @@ class Config {
 	 * Method: getDatabaseFile
 	 *
 	 * Returns:
-	 *    The specified database filename from the configuration file.
+	 *    The specified database filename from the configuration file (defaults 
+	 *    to '' (empty)).
 	 */
-	public function getDatabaseFile() {
-		return $this->getValueWithDefault('database', 'file', '/dev/null');
+	public function getDatabaseFile()
+	{
+		return $this->getValueWithDefault('database', 'file', '');
 	}
 
 	/*
 	 * Method getRoutes
 	 *
-	 * Gets the routes specified in the configuration file.
+	 * Gets the routes specified in routes.php file in the config directory.
 	 *
 	 * Returns:
-	 *    An array with all routes that are specified in the configuration
-	 *    file.
+	 *    An array with all routes that are specified in the routes.php 
+	 *    configuration file.
 	 */
-	public function getRoutes() {
+	public function getRoutes()
+	{
 		return $this->routes;
 	}
 
 	/*
 	 * Method: shouldDebug
 	 *
-	 * Wheather to go into debug mode or not.
+	 * Whether to go into debug mode or not.
 	 *
 	 * Returns:
-	 *     True if debug mode should be enabled, false otherwise.
+	 *     As specified in the configuration file defaults to true.
 	 */
-	public function shouldDebug() {
+	public function shouldDebug()
+	{
 		return $this->getValueWithDefault('application', 'debug', true);
 	}
 
@@ -223,7 +267,23 @@ class Config {
 	private $settings;
 	private $routes;
 
-	protected function getValueWithDefault($section, $name, $default) {
+	/*
+	 * Method: getValueWithDefault
+	 *
+	 * Get a setting from the configuration but fallback on a default value if 
+	 * the setting can not be found in the configuration file.
+	 *
+	 * Parameters:
+	 *     section - The section to look under.
+	 *     name - The keyword to look up.
+	 *     default - The default value.
+	 *
+	 * Returns:
+	 *     The value specified in the configuration file, or _default_ if no 
+	 *     value was specified in the configuration file.
+	 */
+	protected function getValueWithDefault($section, $name, $default)
+	{
 		if ($this->settings && isset($this->settings[$section]) &&
 			isset($this->settings[$section][$name]))
 		{

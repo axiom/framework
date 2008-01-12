@@ -4,7 +4,8 @@
  *
  * The Request class abstracts a request comming from the webclient.
  */
-class Request {
+class Request
+{
 
 	/*
 	 * Constructor: __construct
@@ -14,7 +15,8 @@ class Request {
 	 * Parameters:
 	 *     raw_request - Should come from PHP's *$_SERVER['REQUEST']*.
 	 */
-	public function __construct($raw_request) {
+	public function __construct($raw_request)
+	{
 		$this->uri = $raw_request['REQUEST_URI'];
 		$this->method = strtolower($raw_request['REQUEST_METHOD']);
 		$this->time = $raw_request['REQUEST_TIME'];
@@ -29,42 +31,48 @@ class Request {
 	 * Returns:
 	 *     The requested URI.
 	 */
-	public function getURI() {
+	public function getURI()
+	{
 		return substr($this->uri, 0, strlen($this->uri));
 	}
 
 	/*
 	 * Method: getMethod
 	 *
+	 * The method used by the browser i.e. one of: head, get, post (and in
+	 * the future also: delete and put).
+	 *
 	 * Returns:
-	 *     The method used by the browser i.e. one of: head, get, post (and in
-	 *     the future also: delete and put).
+	 *     One of post, get, head, put or delete.
 	 */
-	public function getMethod() {
+	public function getMethod()
+	{
 		return strtolower($this->method);
 	}
 
 	/*
 	 * Method: isPost
 	 *
-	 * Check if the request was a POST request.
+	 * Check if the request was a post request.
 	 *
 	 * Returns:
-	 *     True if the request was a POST request false otherwise.
+	 *     True if the request was a post request false otherwise.
 	 */
-	public function isPost() {
+	public function isPost()
+	{
 		return $this->getMethod() == 'post';
 	}
 
 	/*
 	 * Method: isGet
 	 *
-	 * Check if the request was a GET request.
+	 * Check if the request was a get request.
 	 *
 	 * Returns:
-	 *     True if the request was a GET request false otherwise.
+	 *     True if the request was a get request false otherwise.
 	 */
-	public function isGet() {
+	public function isGet()
+	{
 		return $this->getMethod() == 'get';
 	}
 
@@ -79,7 +87,8 @@ class Request {
 	 * Returns:
 	 *     The query string.
 	 */
-	public function getQueryString() {
+	public function getQueryString()
+	{
 		return $this->query;
 	}
 
@@ -95,7 +104,8 @@ class Request {
 	 *     An associated array of key value pairs, or just the value if key was
 	 *     given.
 	 */
-	public function getPostData($key = null) {
+	public function getPostData($key = null)
+	{
 		if ($key && isset($this->post_data[$key])) {
 			return $this->post_data[$key];
 		} else {
@@ -114,7 +124,8 @@ class Request {
 	 * Returns:
 	 *     The header value, if the header key existed false otherwise.
 	 */
-	public function getHeader($header) {
+	public function getHeader($header)
+	{
 		$headers = apache_request_headers();
 		if (array_key_exists($header, $headers)) {
 			return $headers[$header];

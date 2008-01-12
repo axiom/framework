@@ -11,8 +11,10 @@
  * render a view. This is done by the <render> method. Controllers also usually
  * communicate with one or more <Model> classes.
  */
-class Controller {
-	public function __construct($request = null) {
+class Controller
+{
+	public function __construct($request = null)
+	{
 		$this->request = $request;
 		$this->config = Config::getInstance();
 	}
@@ -32,11 +34,12 @@ class Controller {
 	 *     _application/views/layouts_.
 	 *
 	 * Returns:
-	 *     Will return false if something went horribly wrong, otherwise in
-	 *     will just return true.
+	 *     Will return false if something went horribly wrong, otherwise it
+	 *     will return true.
 	 */
-	protected function render($view_name, $data = null, $layout = "default") {
-		// Instansiate variables from the keys in the data array.
+	protected function render($view_name, $data = null, $layout = "default")
+	{
+		// Extract variables from the array into the scope of the view.
 		if (is_array($data)) {
 			extract($data, EXTR_SKIP | EXTR_REFS);
 		} else {
@@ -65,7 +68,7 @@ class Controller {
 			echo $content_for_layout;
 		}
 
-		return;
+		return true;
 	}
 
 	/*
@@ -81,7 +84,8 @@ class Controller {
 	 * Returns:
 	 *     Nothing.
 	 */
-	protected function renderPartial($view_name, $data = null) {
+	protected function renderPartial($view_name, $data = null)
+	{
 		$this->render($view_name, $data, null);
 	}
 
@@ -89,18 +93,22 @@ class Controller {
 	 * Method: renderPartialCollection
 	 *
 	 * Will take a collection of "data-entries" and render a partial view for
-	 * each of them. Optionally entries can be seperated with a seperator-view.
+	 * each of them. Optionally entries can be seperated with a seperator-view. 
+	 * The rendered view will have the data available in the variable with the 
+	 * same name as the view. E.g. if we render 'blog/post' the data will be in 
+	 * the variable _$post_.
 	 *
 	 * Parameters:
-	 *     view_name - Same as in <render>.
+	 *     view - Same as in <render>.
 	 *
-	 *     data_array - An array of data-entries (see <render>).
+	 *     data - An array of data-entries (see <render>).
 	 *
 	 *     seperator_view_name - The name of a seperator view to be placed in
 	 *     between each entry (that means that there will be no seperator after
 	 *     the last entry).
 	 */
-	protected function renderPartialCollection($view, $data, $seperator = null) {
+	protected function renderPartialCollection($view, $data, $seperator = null)
+	{
 		$i = 1;
 		foreach ($data as $item_data) {
 			$data_name = split('/', $view);
@@ -116,32 +124,32 @@ class Controller {
 	/*
 	 * Method: renderText
 	 *
-	 * Add text to the output buffer.
+	 * Output some text to the browser.
 	 *
 	 * Parameters:
 	 *     text - The text to be added to the output buffer.
 	 */
-	protected function renderText($text) {
+	protected function renderText($text)
+	{
 		echo $text;
 	}
 
 	/*
 	 * Method: redirect
 	 *
-	 * Will redirect the browser to a new location.
+	 * Will redirect the browser to a new location (sets the header 
+	 * 'Location').
 	 *
 	 * Parameters:
 	 *     url - A <Route> e.g. _blog/show/1_.
-	 *
-	 * Returns:
-	 *     Nothing.
 	 */
-	protected function redirect($url) {
+	protected function redirect($url)
+	{
 		header('Location: '.$this->config->getBasepath(true).'/'.$url);
-		return true;
 	}
 
-	protected function __toString() {
+	protected function __toString()
+	{
 		return "I'm a controller.";
 	}
 

@@ -1,8 +1,9 @@
 <?php
+// Setup the timezone and the locale to swedish. (For dates and such.)
 date_default_timezone_set('Europe/Stockholm');
 setlocale(LC_TIME, 'sv_SE.UTF-8');
 
-// Load all framework files.
+// Loads every file in the directory '$framework_path'.
 foreach (scandir($framework_path) as $file) {
 	if (strpos($file, '.php')) {
 		require_once($framework_path.'/'.$file);

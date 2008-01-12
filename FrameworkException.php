@@ -3,7 +3,8 @@ class FrameworkException extends Exception {
 	const NOT_FOUND = 1;
 	const NOT_FOUND_IN_DATABASE = 2;
 	const NOT_FOUND_IN_FILESYSTEM = 4;
-	const OTHER = 8;
+	const CACHE_DIR_NOT_WRITEABLE = 8;
+	const OTHER = 16;
 
 	public function __construct($code, $message)
 	{
@@ -11,6 +12,7 @@ class FrameworkException extends Exception {
 			self::NOT_FOUND => 'Fel',
 			self::NOT_FOUND_IN_DATABASE => 'Databasfel',
 			self::NOT_FOUND_IN_FILESYSTEM => 'Lagringsfel',
+			self::CACHE_DIR_NOT_WRITEABLE => 'Lagringsfel',
 			self::OTHER => 'Okänt fel'
 		);
 		

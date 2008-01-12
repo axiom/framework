@@ -14,8 +14,10 @@
  * $r->getNumberOfRequiredParameters(); // 1
  * (end example)
  */
-class Route {
-	public function __construct($uri) {
+class Route
+{
+	public function __construct($uri)
+	{
 		$config = Config::getInstance();
 		$this->uri = strtolower(substr($uri,
 		                               strlen($config->getBasepath()),
@@ -35,7 +37,8 @@ class Route {
 	 * Parses the URI with respect to the routes set up in the
 	 * routes-configuration file.
 	 */
-	protected function parse() {
+	protected function parse()
+	{
         $routes = Config::getInstance()->getRoutes();
 
 		// Go through the routes in the config file from top to bottom, stoping
@@ -81,7 +84,8 @@ class Route {
 	 * Returns:
 	 *     The uri attribute of the class.
 	 */
-	public function getURI() {
+	public function getURI()
+	{
 		return $this->uri;
 	}
 
@@ -97,7 +101,8 @@ class Route {
 	 *     If the segment exists it will be returned otherwise false will be
 	 *     returned.
 	 */
-	public function getSegment($segment_number) {
+	public function getSegment($segment_number)
+	{
 		if ($segment_number <= count($this->segments)) {
 			return $this->segments[$segment_number - 1];
 		} else {
@@ -114,7 +119,8 @@ class Route {
 	 * Returns:
 	 *     An array of parameters if there was any, otherwise false.
 	 */
-	public function getParameters() {
+	public function getParameters()
+	{
 		$params = array_slice($this->segments, 2);
 
 		if (count($params) == 0) {
@@ -134,7 +140,8 @@ class Route {
 	 *     Number of paramaters, if no extra parameters where given it returns
 	 *     0.
 	 */
-	public function getNumberOfParameters() {
+	public function getNumberOfParameters()
+	{
 		$n = count($this->segments) - 2;
 		return max(0, $n);
 	}
@@ -147,7 +154,8 @@ class Route {
 	 * Returns:
 	 *     The capitalized name of the controller (without any suffix).
 	 */
-	public function getController() {
+	public function getController()
+	{
 		return ucfirst($this->getSegment(1));
 	}
 
@@ -159,7 +167,8 @@ class Route {
 	 * Returns:
 	 *     The (lowercase) name of the requested action.
 	 */
-	public function getAction() {
+	public function getAction()
+	{
 		return strtolower($this->getSegment(2));
 	}
 }

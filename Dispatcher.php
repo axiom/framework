@@ -2,9 +2,12 @@
 /*
  * Class: Dispatcher
  *
- * The Dispatcher dispatches actions based on URI requests.
+ * The Dispatcher is the thing that take a request and calls the right methods 
+ * in the right classes. One can say that it maps URI requests to method 
+ * invocations.
  */
-class Dispatcher {
+class Dispatcher
+{
 
 	/*
 	 * Constructor: __construct
@@ -12,7 +15,8 @@ class Dispatcher {
 	 * Initializes the Dispatcher. Starts caching if it is enabled in the
 	 * config-file.
 	 */
-	public function __construct($uri = null) {
+	public function __construct($uri = null)
+	{
 		$this->config = Config::getInstance();
 		$this->request = new Request($_SERVER);
 
@@ -22,12 +26,12 @@ class Dispatcher {
 		if ($this->config->useCache() || $this->config->useImageCache()) {
 			$this->cache = new Cache($this->request);
 
-			// Execute the dispatch unless the cache file already has been served.
+			// If caching is enabled but the cache file is not in the system 
+			// the dispatch has to be done so we can create the file.
 			if (!$this->cache->isServed()) {
 				$this->dispatch();
 			}
-		}
-		else {
+		} else {
 			$this->dispatch();
 		}
 	}
@@ -52,8 +56,8 @@ class Dispatcher {
 	 *
 	 *  - Required parameters are missing in the method call.
 	 */
-	private function dispatch() {
-
+	private function dispatch()
+	{
 		$success = $this->tryDispatch();
 
 		if (!$success) {
@@ -68,6 +72,7 @@ class Dispatcher {
 					}
 				}
 			} else {
+				// 404 Not Found
 				throw new FrameworkException(FrameworkException::NOT_FOUND,
 					"Kunde tyvärr inte hitta sidan du sökte.");
 			}
@@ -75,7 +80,13 @@ class Dispatcher {
 		return $success;
 	}
 
-	private function tryDispatch() {
+	/*
+	 * Method: tryDispatch
+	 *
+	 * FIXME: Reimund?
+	 */
+	private function tryDispatch()
+	{
 		// Get the name of the controller to be instantiated.
 		$controller_name = $this->route->getController();
 		$defualt_method = $this->config->getDefaultAction();

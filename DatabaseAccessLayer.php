@@ -50,11 +50,12 @@ class DatabaseAccessLayer {
 	{
 		$items = self::$db->query($sql, PDO::FETCH_ASSOC)->fetchAll();
 
-		if (!is_array($items))
+		// Check if we got any results from the query.
+		if (!is_array($items)) {
 			return false;
+		}
 
 		$stuff_on_my_cat = array();
-		$i = 0;
 		foreach ($items as $item) {
 			array_push($stuff_on_my_cat, new $model_name($item, $associations));
 		}
@@ -62,12 +63,31 @@ class DatabaseAccessLayer {
 		return $stuff_on_my_cat;
 	}
 
+	/*
+	 * Method: getOne
+	 *
+	 * Helper method intended to instanciate one object.
+	 *
+	 * Parameters:
+	 *     sql - The sql statement to get the data from the database, should 
+	 *     only return one tuple.
+	 *     model_name - The name of the class to instanciate.
+	 *
+	 * Returns:
+	 *     An instanciation of the object _model_name_.
+	 */
 	protected function getOne($sql, $model_name)
 	{
 		$item = self::$db->query($sql, PDO::FETCH_ASSOC)->fetch();
 		return (is_array($item) ? new $model_name($item) : false);
 	}
 
+	/*
+	 * Metod: setupDb
+	 *
+	 * Setup a static reference to a PDO connection object. It's static so that 
+	 * all subclasses can use the same database connection.
+	 */
 	protected static function setupDb()
 	{
 		if (is_object(self::$db)) {
