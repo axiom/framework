@@ -13,7 +13,6 @@
  */
 class Controller {
 	public function __construct($request = null) {
-		$this->load = Loader::getInstance();
 		$this->request = $request;
 		$this->config = Config::getInstance();
 	}
@@ -142,16 +141,10 @@ class Controller {
 		return true;
 	}
 
-	protected function __get($name) {
-		return $this->load->$name;
-	}
-
 	protected function __toString() {
 		return "I'm a controller.";
 	}
 
 	protected $request;
-	protected $load;
 	protected $config;
 }
-?>

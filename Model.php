@@ -1,9 +1,14 @@
 <?php
 class Model {
-	public function __construct($attr = null) {
+	public function __construct($attr = null, $associations = null) {
 		$this->attr = $attr;
 		$this->relations = array();
-		$this->load = Loader::getInstance();
+
+		if (is_array($associations)) {
+			foreach ($associations as $name => $ass) {
+				$this->relations[$name] = $ass;
+			}
+		}
 	}
 
 	public function __get($name) {

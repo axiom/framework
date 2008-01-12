@@ -19,7 +19,6 @@ class DatabaseAccessLayer {
 	 */
 	public function __construct() {
 		$this->config = Config::getInstance();
-		$this->load = Loader::getInstance();
 		$driver = $this->config->getDatabaseDriver();
 		$host = $this->config->getDatabaseHostname();
 		$user = $this->config->getDatabaseUsername();
@@ -38,6 +37,7 @@ class DatabaseAccessLayer {
 					$this->db = new PDO($driver.':dbname='.$dbname.';host='.$host,
 					                    $user, $pass);
 			}
+			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		} catch (PDOException $e) {
 			throw new Exception("Kunde inte etablera anslutning till databasen. (".
 			                    $e->getMessage().')');
@@ -51,8 +51,28 @@ class DatabaseAccessLayer {
 	 * access should go thruh this object.
 	 */
 	protected $db;
-	protected $load;
 	protected $config;
+
+	protected function getMany($sql, $model_name, $associations = null)
+	{
+		$items = $this->db->query($sql, PDO::FETCH_ASSOC)->fetchAll();
+
+		if (!is_array($items))
+			return false;
+
+		$objects = array();
+		foreach ($items as $item) {
+			array_push($objects, new $model_name($item, $associations));
+		}
+
+		return $objects;
+	}
+
+	protected function getOne($sql, $model_name)
+	{
+		$item = $this->db->query($sql, PDO::FETCH_ASSOC)->fetch();
+		return (is_array($item) ? new $model_name($item) : false);
+	}
 
 	/*
 	 * Method: instanciateCollection

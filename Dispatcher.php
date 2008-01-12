@@ -12,10 +12,12 @@ class Dispatcher {
 	 * Initializes the Dispatcher. Starts caching if it is enabled in the
 	 * config-file.
 	 */
-	public function __construct($raw_request) {
+	public function __construct($uri = null) {
 		$this->config = Config::getInstance();
-		$this->request = new Request($raw_request);
-		$this->route = new Route($this->request->getURI());
+		$this->request = new Request($_SERVER);
+
+		$uri = ($uri ? $uri : $this->request->getURI());
+		$this->route = new Route($uri);
 
 		if ($this->config->useCache() || $this->config->useImageCache()) {
 			$this->cache = new Cache($this->request);

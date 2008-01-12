@@ -128,6 +128,10 @@ class Config {
 			'index');
 	}
 
+	public function getErrorController() {
+		return false;
+	}
+
 	/*
 	 * Method: useCache
 	 *

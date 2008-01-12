@@ -112,10 +112,16 @@ class Route {
 	 * after the action-segment).
 	 *
 	 * Returns:
-	 *     An array of parameters. FIXME
+	 *     An array of parameters if there was any, otherwise false.
 	 */
 	public function getParameters() {
-		return array_slice($this->segments,2);
+		$params = array_slice($this->segments, 2);
+
+		if (count($params) == 0) {
+			return false;
+		} else {
+			return $params;
+		}
 	}
 
 	/*
@@ -129,8 +135,8 @@ class Route {
 	 *     0.
 	 */
 	public function getNumberOfParameters() {
-		$n = count($this->segments)-2;
-		return ($n < 0 ? 0 : $n);
+		$n = count($this->segments) - 2;
+		return max(0, $n);
 	}
 
 	/*
