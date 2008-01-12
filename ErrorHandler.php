@@ -77,8 +77,8 @@ class ErrorHandler {
 	{
 		$trace = print_r($this->getTrace(), true);
 		$body = <<<EOL
-Hej detta är webbapplikationen på cffc.se. Det har tyvärr uppståt ett problem 
-med webbapplikationen som jag tänkte att du kanske borde få veta. Jag bifogar 
+Hej detta är webbapplikationen på cffc.se. Det har tyvärr uppståt ett problem
+med webbapplikationen som jag tänkte att du kanske borde få veta. Jag bifogar
 en felrapport med mailet och en fullständig bakåtspårning av felet.
 
 Felrapport

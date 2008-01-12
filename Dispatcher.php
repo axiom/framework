@@ -2,8 +2,8 @@
 /*
  * Class: Dispatcher
  *
- * The Dispatcher is the thing that take a request and calls the right methods 
- * in the right classes. One can say that it maps URI requests to method 
+ * The Dispatcher is the thing that take a request and calls the right methods
+ * in the right classes. One can say that it maps URI requests to method
  * invocations.
  */
 class Dispatcher
@@ -26,7 +26,7 @@ class Dispatcher
 		if ($this->config->useCache() || $this->config->useImageCache()) {
 			$this->cache = new Cache($this->request);
 
-			// If caching is enabled but the cache file is not in the system 
+			// If caching is enabled but the cache file is not in the system
 			// the dispatch has to be done so we can create the file.
 			if (!$this->cache->isServed()) {
 				$this->dispatch();

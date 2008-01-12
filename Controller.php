@@ -93,9 +93,9 @@ class Controller
 	 * Method: renderPartialCollection
 	 *
 	 * Will take a collection of "data-entries" and render a partial view for
-	 * each of them. Optionally entries can be seperated with a seperator-view. 
-	 * The rendered view will have the data available in the variable with the 
-	 * same name as the view. E.g. if we render 'blog/post' the data will be in 
+	 * each of them. Optionally entries can be seperated with a seperator-view.
+	 * The rendered view will have the data available in the variable with the
+	 * same name as the view. E.g. if we render 'blog/post' the data will be in
 	 * the variable _$post_.
 	 *
 	 * Parameters:
@@ -137,7 +137,7 @@ class Controller
 	/*
 	 * Method: redirect
 	 *
-	 * Will redirect the browser to a new location (sets the header 
+	 * Will redirect the browser to a new location (sets the header
 	 * 'Location').
 	 *
 	 * Parameters:

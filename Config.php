@@ -25,13 +25,13 @@ class Config
 		// FIXME: Hardcoded application path.
 		// Read routes from routes.php.
 		require_once(dirname(__FILE__)."/../application/config/routes.php");
-		$this->routes = $routes; 
+		$this->routes = $routes;
 	}
 
 	/*
 	 * Method: get
 	 *
-	 * Get settings from the configuration file. Also see 
+	 * Get settings from the configuration file. Also see
 	 * <getValueWithDefault>.
 	 *
 	 * Parameters:
@@ -126,7 +126,7 @@ class Config
 	/*
 	 * Method: getDefaultController
 	 *
-	 * Get the default controller for the application, e.g. when no controller 
+	 * Get the default controller for the application, e.g. when no controller
 	 * is specified use this one.
 	 *
 	 * Returns:
@@ -191,7 +191,7 @@ class Config
 	 * Method: getDatabaseUsername
 	 *
 	 * Returns:
-	 *    The specified database username from the configuration file (defaults 
+	 *    The specified database username from the configuration file (defaults
 	 *    to 'root').
 	 */
 	public function getDatabaseUsername()
@@ -203,7 +203,7 @@ class Config
 	 * Method: getDatabasePassword
 	 *
 	 * Returns:
-	 *    The specified database password from the configuration file (defaults 
+	 *    The specified database password from the configuration file (defaults
 	 *    to '' (empty)).
 	 */
 	public function getDatabasePassword()
@@ -215,7 +215,7 @@ class Config
 	 * Method: getDatabaseHostname
 	 *
 	 * Returns:
-	 *    The specified database hostname from the configuration file (defaults 
+	 *    The specified database hostname from the configuration file (defaults
 	 *    to 'localhost').
 	 */
 	public function getDatabaseHostname()
@@ -227,7 +227,7 @@ class Config
 	 * Method: getDatabaseFile
 	 *
 	 * Returns:
-	 *    The specified database filename from the configuration file (defaults 
+	 *    The specified database filename from the configuration file (defaults
 	 *    to '' (empty)).
 	 */
 	public function getDatabaseFile()
@@ -241,7 +241,7 @@ class Config
 	 * Gets the routes specified in routes.php file in the config directory.
 	 *
 	 * Returns:
-	 *    An array with all routes that are specified in the routes.php 
+	 *    An array with all routes that are specified in the routes.php
 	 *    configuration file.
 	 */
 	public function getRoutes()
@@ -270,7 +270,7 @@ class Config
 	/*
 	 * Method: getValueWithDefault
 	 *
-	 * Get a setting from the configuration but fallback on a default value if 
+	 * Get a setting from the configuration but fallback on a default value if
 	 * the setting can not be found in the configuration file.
 	 *
 	 * Parameters:
@@ -279,7 +279,7 @@ class Config
 	 *     default - The default value.
 	 *
 	 * Returns:
-	 *     The value specified in the configuration file, or _default_ if no 
+	 *     The value specified in the configuration file, or _default_ if no
 	 *     value was specified in the configuration file.
 	 */
 	protected function getValueWithDefault($section, $name, $default)

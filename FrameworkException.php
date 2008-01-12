@@ -15,7 +15,7 @@ class FrameworkException extends Exception {
 			self::CACHE_DIR_NOT_WRITEABLE => 'Lagringsfel',
 			self::OTHER => 'Okänt fel'
 		);
-		
+
 		parent::__construct($message, $code);
 		$this->code = $this->error_lookup[$code];
 	}

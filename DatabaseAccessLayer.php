@@ -40,7 +40,7 @@ class DatabaseAccessLayer {
 	 * Parameters:
 	 *     sql - Sql statement that should return multiple rows.
 	 *     model_name - Which model to instanciate (e.g. <PhotoModel>).
-	 *     associations - Any associations to setup with the model object (an 
+	 *     associations - Any associations to setup with the model object (an
 	 *     associative array).
 	 *
 	 * Returns:
@@ -69,7 +69,7 @@ class DatabaseAccessLayer {
 	 * Helper method intended to instanciate one object.
 	 *
 	 * Parameters:
-	 *     sql - The sql statement to get the data from the database, should 
+	 *     sql - The sql statement to get the data from the database, should
 	 *     only return one tuple.
 	 *     model_name - The name of the class to instanciate.
 	 *
@@ -85,7 +85,7 @@ class DatabaseAccessLayer {
 	/*
 	 * Metod: setupDb
 	 *
-	 * Setup a static reference to a PDO connection object. It's static so that 
+	 * Setup a static reference to a PDO connection object. It's static so that
 	 * all subclasses can use the same database connection.
 	 */
 	protected static function setupDb()

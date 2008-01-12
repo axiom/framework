@@ -7,17 +7,17 @@
  * that can be either true or false, when true the caching is enabled when
  * false it's disabled.
  *
- * There is also an option for activating image caching: _use_image_cache_ which 
+ * There is also an option for activating image caching: _use_image_cache_ which
  * will, when enabled, cache images for a period of 30 days.
  *
  * The caching mechanism works on a URI basis. Each request is identified
- * (with the request uri) and this uri together with a timestamp (of sorts) is 
- * then hashed by the sha1  algorithm. A cache file is created by redirecting 
+ * (with the request uri) and this uri together with a timestamp (of sorts) is
+ * then hashed by the sha1  algorithm. A cache file is created by redirecting
  * the output buffer to the cache file.
  *
  * If caching is enabled and a cache file exists for a given identifier, then
  * that file is served to the output buffer. Otherwise the cache file will be
- * created. However if the browser use the If-None-Match header we can skip 
+ * created. However if the browser use the If-None-Match header we can skip
  * sending the file.
  *
  * FIXME: The caching mechanism are quite dumb, it does not allow any dynamic
@@ -32,7 +32,7 @@ class Cache {
 	 * Initialize the class.
 	 *
 	 * Parameters:
-	 *     request - An instance of the <Request> class. (Used to get URI and 
+	 *     request - An instance of the <Request> class. (Used to get URI and
 	 *     headers.)
 	 */
 	public function __construct($request)
@@ -59,8 +59,8 @@ class Cache {
 		// Generate an identifier that can be used as a file descriptor.
 		$this->identifier = sha1($this->identifier . $time);
 
-		// Check if the client already have the file in it's local cache. If it 
-		// does and the cache file is up-to-date we can send a 304 Not Modified 
+		// Check if the client already have the file in it's local cache. If it
+		// does and the cache file is up-to-date we can send a 304 Not Modified
 		// reply (which is nice).
 		if ($request->getHeader('If-None-Match') == $this->identifier) {
 			header("HTTP/1.1 304 Not Modified");
@@ -86,8 +86,8 @@ class Cache {
 			header('ETag: '.$this->identifier);
 			return true;
 		}
-		// We couldn't write to the cache directory, we need to make someone 
-		// aware of this since it effectively disables the whole caching 
+		// We couldn't write to the cache directory, we need to make someone
+		// aware of this since it effectively disables the whole caching
 		// mechanism.
 		else {
 			throw new FrameworkException(FrameworkException::CACHE_DIR_NOT_WRITEABLE,
@@ -98,7 +98,7 @@ class Cache {
 	/*
 	 * Destructor: __destruct
 	 *
-	 * Collects the output from the application and writes it to disc and serves 
+	 * Collects the output from the application and writes it to disc and serves
 	 * it to the browser.
 	 */
 	public function __destruct()
@@ -116,7 +116,7 @@ class Cache {
 	/*
 	 * Method: serveCache
 	 *
-	 * Serves the cache-file to the browser and sets the ETag header for caching 
+	 * Serves the cache-file to the browser and sets the ETag header for caching
 	 * purposes.
 	 */
 	private function serveCache()
