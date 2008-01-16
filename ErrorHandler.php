@@ -17,8 +17,6 @@ class ErrorHandler {
 		if (!error_reporting()) {
 			return;
 		}
-
-		throw new Exception($errstr, $errno);
 	}
 
 	public function exceptionHandler(Exception $e)
@@ -75,7 +73,7 @@ class ErrorHandler {
 	 */
 	protected function mailTrace(Exception $e, $address)
 	{
-		$trace = print_r($this->getTrace(), true);
+		$trace = print_r($this->exception->getTrace(), true);
 		$body = <<<EOL
 Hej detta är webbapplikationen på cffc.se. Det har tyvärr uppståt ett problem
 med webbapplikationen som jag tänkte att du kanske borde få veta. Jag bifogar
