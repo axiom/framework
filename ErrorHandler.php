@@ -17,6 +17,8 @@ class ErrorHandler {
 		if (!error_reporting()) {
 			return;
 		}
+
+		debug_backtrace();
 	}
 
 	public function exceptionHandler(Exception $e)

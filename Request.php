@@ -77,6 +77,20 @@ class Request
 	}
 
 	/*
+	 * Method: isXMLHttp
+	 *
+	 * Tells whether an request was made as a XMLHttpRequest or not.
+	 *
+	 * Returns:
+	 *     True if teh request was made as a XMLHttpRequest, false otherwise.
+	 */
+	public function isXMLHttp()
+	{
+		$header = $this->getHeader('X-Requested-With');
+		return ($header == 'XMLHttpRequest');
+	}
+
+	/*
 	 * Method: getQueryString
 	 *
 	 * The querystring is what was appended as extra information to the
@@ -108,8 +122,10 @@ class Request
 	{
 		if ($key && isset($this->post_data[$key])) {
 			return $this->post_data[$key];
-		} else {
+		} else if ($key == null) {
 			return $this->post_data;
+		} else {
+			return $null;
 		}
 	}
 

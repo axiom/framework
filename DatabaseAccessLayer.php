@@ -52,7 +52,8 @@ class DatabaseAccessLayer {
 
 		// Check if we got any results from the query.
 		if (!is_array($items)) {
-			return false;
+			throw new FrameworkException(FrameworkException::NOT_FOUND_IN_DATABASE,
+				"Kunde inte hitta resursen i databasen.");
 		}
 
 		$stuff_on_my_cat = array();
@@ -79,6 +80,12 @@ class DatabaseAccessLayer {
 	protected function getOne($sql, $model_name)
 	{
 		$item = self::$db->query($sql, PDO::FETCH_ASSOC)->fetch();
+
+		if (!$item) {
+			throw new FrameworkException(FrameworkException::NOT_FOUND_IN_DATABASE,
+				"Kunde inte hitta resursen i databasen.");
+		}
+
 		return (is_array($item) ? new $model_name($item) : false);
 	}
 
