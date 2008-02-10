@@ -174,7 +174,8 @@ class Cache {
 			$uri = 'index';
 		}
 
-		if (strpos($uri, 'headers') !== false) {
+		if (strpos($uri, 'headers') !== false ||
+		    strpos($uri, 'thumbnail') !== false) {
 			$uri = $uri.'.jpg';
 		} else {
 			$uri = $uri.'.html';
