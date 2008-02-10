@@ -57,7 +57,8 @@ class Cache {
 		}
 
 		// Generate an identifier that can be used as a file descriptor.
-		$this->identifier = sha1($this->identifier . $time);
+		// $this->identifier = sha1($this->identifier . $time);
+		$this->identifier = $this->getIdentifier($this->identifier);
 
 		// Check if the client already have the file in it's local cache. If it
 		// does and the cache file is up-to-date we can send a 304 Not Modified
@@ -103,7 +104,8 @@ class Cache {
 	 */
 	public function __destruct()
 	{
-		if ($this->active) {
+		if ($this->active && ob_get_level() && ob_get_length()) {
+			mkdir(dirname($this->cacheFile), 0755, true);
 			$fh = fopen($this->cacheFile, 'w');
 			fwrite($fh, ob_get_contents());
 			fclose($fh);
@@ -111,19 +113,6 @@ class Cache {
 			$this->active = false;
 		}
 		return true;
-	}
-
-	/*
-	 * Method: serveCache
-	 *
-	 * Serves the cache-file to the browser and sets the ETag header for caching
-	 * purposes.
-	 */
-	private function serveCache()
-	{
-		header('ETag: '.$this->identifier);
-		readfile($this->cacheFile);
-		return;
 	}
 
 	/*
@@ -155,5 +144,43 @@ class Cache {
 	private $served = false;
 	private $identifier;
 	private $request;
+
+	/*
+	 * Method: serveCache
+	 *
+	 * Serves the cache-file to the browser and sets the ETag header for caching
+	 * purposes.
+	 */
+	private function serveCache()
+	{
+		header('ETag: '.$this->identifier);
+		readfile($this->cacheFile);
+		return;
+	}
+
+	private function getIdentifier($uri)
+	{
+		$uri = urldecode($uri);
+
+		$parts = explode('/', $uri);
+
+		foreach ($parts as $i => $part) {
+			$parts[$i] = trim(preg_replace('/\W/', '_', $part), '_/');
+		}
+
+		$uri = trim(implode('/', $parts), '/_');
+
+		if ($uri == '') {
+			$uri = 'index';
+		}
+
+		if (strpos($uri, 'headers') !== false) {
+			$uri = $uri.'.jpg';
+		} else {
+			$uri = $uri.'.html';
+		}
+
+		return $uri;
+	}
 }
 ?>

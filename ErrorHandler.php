@@ -34,7 +34,7 @@ class ErrorHandler {
 			$this->mailTrace($e, 'johannes@antiklimax.se');
 		}
 
-		if ($this->serveErrorPage()) {
+		if (!Config::getInstance()->shouldDebug() && $this->serveErrorPage()) {
 			die();
 		}
 

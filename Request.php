@@ -142,11 +142,13 @@ class Request
 	 */
 	public function getHeader($header)
 	{
-		$headers = apache_request_headers();
-		if (array_key_exists($header, $headers)) {
-			return $headers[$header];
-		} else {
-			return false;
+		if (function_exists('apache_request_headers')) {
+			$headers = apache_request_headers();
+			if (array_key_exists($header, $headers)) {
+				return $headers[$header];
+			} else {
+				return false;
+			}
 		}
 	}
 
