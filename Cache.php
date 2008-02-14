@@ -165,7 +165,7 @@ class Cache {
 		$parts = explode('/', $uri);
 
 		foreach ($parts as $i => $part) {
-			$parts[$i] = trim(preg_replace('/\W/', '_', $part), '_/');
+			$parts[$i] = trim(preg_replace('/[^a-zA-Z0-9._-]/', '_', $part), '_/');
 		}
 
 		$uri = trim(implode('/', $parts), '/_');
@@ -174,10 +174,8 @@ class Cache {
 			$uri = 'index';
 		}
 
-		if (strpos($uri, 'headers') !== false ||
-		    strpos($uri, 'thumbnail') !== false) {
-			$uri = $uri.'.jpg';
-		} else {
+		if (strpos($uri, '.jpg') === false &&
+		    strpos($uri, '.png') === false) {
 			$uri = $uri.'.html';
 		}
 
