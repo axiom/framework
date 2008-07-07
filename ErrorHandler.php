@@ -92,7 +92,10 @@ Bakåtspårning
 EOL;
 
 		$subject = '[cffc.se] Backtrace från cffc.se';
-		mail($address, $subject, $body, "From: cffc-www@cffc.se\r\n");
+		$headers = "From: cffc-www@cffc.se\r\n" .
+		           "Return-Path: " . $address . "\r\n" .
+		           "Errors-To: " . $address . "\r\n";
+		mail($address, $subject, $body, $headers);
 	}
 	// }}}
 }
