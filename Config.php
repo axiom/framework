@@ -15,8 +15,6 @@ class Config
 	 */
 	protected function __construct()
 	{
-		$this->BASEPATH = dirname($_SERVER["PHP_SELF"]);
-
 		// FIXME: Hardcoded application path.
 		// Read user settings from config file.
 		$this->settings = parse_ini_file(
@@ -52,19 +50,24 @@ class Config
 	 * The basepath is the URL-location of this application.
 	 *
 	 * Parameters:
-	 *     full - If this is set to true the full url-basepath will be returned
+	 *     absolute - If this is set to true the absolute url-basepath will be returned
 	 *     (e.g.  _http://example.com/wickedapp/_), else just the relative url
 	 *     will be returned
 	 *
 	 * Returns:
 	 *     The basepath to the application.
 	 */
-	public function getBasepath($full = false)
+	public function getBasepath($absolute = false)
 	{
-		if ($full) {
-			return trim('http://'.$_SERVER['HTTP_HOST'].'/'.$this->BASEPATH, '/');
+		$basepath = trim($this->getValueWithDefault('application', 'basepath', ''), '/');
+
+		if ($absolute) {
+			return trim('http'.(empty($_SERVER['HTTPS']) ? '': 's').
+			            '://'.$_SERVER['HTTP_HOST'].'/'.$basepath, '/');
+		} else if (!empty($basepath)) {
+			return '/' . $basepath . '/';
 		} else {
-			return $this->BASEPATH;
+			return '/';
 		}
 	}
 
@@ -262,7 +265,6 @@ class Config
 		return $this->getValueWithDefault('application', 'debug', true);
 	}
 
-	private $BASEPATH = "";
 	private static $INSTANCE = null;
 	private $settings;
 	private $routes;
