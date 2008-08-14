@@ -52,9 +52,8 @@ class Controller
 		// Suspend output so that we can put it in a string later.
 		ob_start();
 
-		// FIXME: Hardcoded application path.
 		// Run through the view (with output going to the buffer).
-		include(dirname(__FILE__)."/../application/views/".$view_name.".php");
+		include($this->config->getApplicationPath() . "/views/".$view_name.".php");
 
 		// Place the buffer contents in the variable and clear the buffer.
 		$content_for_layout = ob_get_clean();
@@ -62,8 +61,7 @@ class Controller
 		// Now we check if a layout should be used and if it exists, else we'll
 		// go ahead without a layout.
 		if ($layout) {
-			// FIXME: Hardcoded application path.
-			include(dirname(__FILE__)."/../application/views/layouts/default.php");
+			include($this->config->getApplicationPath() . "/views/layouts/default.php");
 		} else {
 			echo $content_for_layout;
 		}

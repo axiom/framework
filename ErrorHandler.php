@@ -95,7 +95,9 @@ EOL;
 		$headers = "From: cffc-www@cffc.se\r\n" .
 		           "Return-Path: " . $address . "\r\n" .
 		           "Errors-To: " . $address . "\r\n";
-		mail($address, $subject, $body, $headers);
+
+		// FIXME: fix so that mails get delivered correctly.
+		//mail($address, $subject, $body, $headers);
 	}
 	// }}}
 }

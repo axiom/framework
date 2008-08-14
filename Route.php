@@ -19,12 +19,15 @@ class Route
 	public function __construct($uri)
 	{
 		$config = Config::getInstance();
-		$this->uri = strtolower(substr($uri,
-		                               strlen($config->getBasepath()),
-		                               strlen($uri)));
+		$this->uri = substr($uri, strlen($config->getBasepath()),strlen($uri));
 
-		// Strip trailing slashes and convert to lowercase.
-		$this->uri = trim(strtolower($this->uri),"\/");
+		// Strip trailing slashes.
+		$this->uri = trim($this->uri,"\/");
+
+		if (!$config->getUrlCaseSensitive()) {
+			$this->uri = trim(strtolower($this->uri),"\/");
+		}
+
 		$this->parse();
 
 		// Divide the uri into segments.

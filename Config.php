@@ -5,6 +5,7 @@
  * Configuration class that parses the applications configuration file.
  * Imlemented as a singelton (<getInstance>).
  */
+
 class Config
 {
 
@@ -15,15 +16,16 @@ class Config
 	 */
 	protected function __construct()
 	{
-		// FIXME: Hardcoded application path.
-		// Read user settings from config file.
-		$this->settings = parse_ini_file(
-			dirname(__FILE__)."/../application/config/config.ini", true);
+		$this->application_path = getcwd() . "/../application";
 
-		// FIXME: Hardcoded application path.
+		// Read user settings from config file.
+		$this->settings = parse_ini_file($this->application_path .
+		                                 "/config/config.ini", true);
+
 		// Read routes from routes.php.
-		require_once(dirname(__FILE__)."/../application/config/routes.php");
+		require_once($this->application_path . "/config/routes.php");
 		$this->routes = $routes;
+
 	}
 
 	/*
@@ -64,6 +66,7 @@ class Config
 		if ($absolute) {
 			return trim('http'.(empty($_SERVER['HTTPS']) ? '': 's').
 			            '://'.$_SERVER['HTTP_HOST'].'/'.$basepath, '/');
+
 		} else if (!empty($basepath)) {
 			return '/' . $basepath . '/';
 		} else {
@@ -83,7 +86,7 @@ class Config
 	public function getCacheDir()
 	{
 		// FIXME: Hardcoded application path.
-		$default = dirname(__FILE__)."/../application/cache";
+		$default = $this->application_path . "/cache";
 		return $this->getValueWithDefault('application', 'cache_dir', $default);
 	}
 
@@ -124,6 +127,16 @@ class Config
 	public function useImageCache()
 	{
 		return $this->getValueWithDefault('application', 'use_image_cache', true);
+	}
+
+	public function getApplicationPath()
+	{
+		return $this->application_path;
+	}
+
+	public function getUrlCaseSensitive()
+	{
+		return $this->getValueWithDefault('application', 'url_case_sensitive', true);
 	}
 
 	/*

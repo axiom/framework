@@ -10,7 +10,7 @@ $include_path = array(
 );
 
 $include_path = array_map(create_function('$dir',
-	'return dirname(__FILE__)."/../application/".$dir;'), $include_path);
+	'return getcwd()."/../application/".$dir;'), $include_path);
 
 set_include_path(implode(PATH_SEPARATOR, $include_path));
 /*

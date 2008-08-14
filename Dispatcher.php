@@ -101,7 +101,8 @@ class Dispatcher
 
 		// FIXME: Hardcoded application path.
 		// Make sure the controller-class file exists
-		$controller_file = dirname(__FILE__) . "/../application/controllers/" .
+
+		$controller_file = $this->config->getApplicationPath() . "/controllers/" .
 			$controller_name . ".php";
 		if (file_exists($controller_file)) {
 			// Include the controller-class file.
