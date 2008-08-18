@@ -38,6 +38,12 @@ class Cache {
 	public function __construct($request)
 	{
 		$this->config = Config::getInstance();
+		$this->cacheDir = $this->config->getCacheDir();
+
+		if ($request === null) {
+			return;
+		}
+
 		$this->request = $request;
 		$this->identifier = $this->request->getURI();
 
@@ -70,7 +76,6 @@ class Cache {
 			return true;
 		}
 
-		$this->cacheDir = $this->config->getCacheDir();
 		$this->cacheFile = $this->cacheDir.'/'.$this->identifier;
 
 		// If we've the file in our cache just serve that and be done with it.
@@ -94,6 +99,12 @@ class Cache {
 			throw new FrameworkException(FrameworkException::CACHE_DIR_NOT_WRITEABLE,
 				"Kunde inte skriva till cache katalogen, kontrollera rättigheterna.");
 		}
+	}
+
+	public function getCacheFile($uri)
+	{
+		$identifier = $this->getIdentifier($uri);
+		return $this->cacheDir.'/'.$identifier;
 	}
 
 	/*
