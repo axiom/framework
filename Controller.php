@@ -61,7 +61,7 @@ class Controller
 		// Now we check if a layout should be used and if it exists, else we'll
 		// go ahead without a layout.
 		if ($layout) {
-			include($this->config->getApplicationPath() . "/views/layouts/default.php");
+			include($this->config->getApplicationPath() . "/views/layouts/".$layout.".php");
 		} else {
 			echo $content_for_layout;
 		}
